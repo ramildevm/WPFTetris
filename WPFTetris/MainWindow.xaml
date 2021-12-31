@@ -1,0 +1,23 @@
+﻿<Window x:Class="WPFTetris.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFTetris"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="408.4" Width="375.2">
+    <DockPanel Background="Azure">
+        <WrapPanel MaxHeight="300" MaxWidth="202" Background="LightGray">
+            <WrapPanel.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Width" Value="10"/>
+                    <Setter Property="Height" Value="10"/>
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                </Style>
+            </WrapPanel.Resources>
+            
+        </WrapPanel>      
+    </DockPanel>
+</Window>
