@@ -13,29 +13,55 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+
 namespace WPFTetris
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         Dictionary<int[], Button> buttonsDict = new Dictionary<int[], Button>();
+        System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
             LoadButtons();
+            timer.Interval = new TimeSpan(0,0,0,0,500);
+            timer.Tick += timer_Tick;
         }
         private void LoadButtons()
         {
-            for(int y = 0;y<22; y++)
+            for (int y = 0; y < 22; y++)
             {
                 for (int x = 0; x < 10; x++)
-                {                    
+                {
                     Button b = new Button();
                     if (y < 2) b.Visibility = Visibility.Hidden;
                     mainPanel.Children.Add(b);
-                    buttonsDict.Add(new int[] {y,x }, b);
+                    buttonsDict.Add(new int[] { y, x }, b);
+                }
+            }
+        }
+        public void timer_Tick(object sender, EventArgs e)
+        {
+            for (int y = 2; y < 22; y++)
+            {
+                bool isWhite = false;
+                for (int x = 0; x < 10; x++)
+                {
+                    if (buttonsDict[new int[] { y, x }].Background == Brushes.White) isWhite = true;
+                }
+                if (!isWhite)
+                {
+                    MoveDown(y);
+                }
+            }
+        }
+        private void MoveDown(int ymax)
+        {
+            for (int y = 1; y < ymax; y++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    buttonsDict[new int[] { y+1, x }].Background = buttonsDict[new int[] { y, x }].Background;
                 }
             }
         }
