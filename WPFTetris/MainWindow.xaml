@@ -5,19 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFTetris"
         mc:Ignorable="d"
-        Title="MainWindow" Height="408.4" Width="375.2">
+        Title="MainWindow" Height="513.467" Width="375.2">
     <DockPanel Background="Azure">
-        <WrapPanel MaxHeight="300" MaxWidth="202" Background="LightGray">
+        <WrapPanel Name="mainPanel" MaxHeight="441" MaxWidth="201" Background="LightGray">
             <WrapPanel.Resources>
                 <Style TargetType="Button">
-                    <Setter Property="Width" Value="10"/>
-                    <Setter Property="Height" Value="10"/>
+                    <Setter Property="Width" Value="20"/>
+                    <Setter Property="Height" Value="20"/>
                     <Setter Property="Background" Value="White"/>
                     <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderThickness" Value="0.5"/>
                 </Style>
             </WrapPanel.Resources>
-            
         </WrapPanel>      
     </DockPanel>
 </Window>

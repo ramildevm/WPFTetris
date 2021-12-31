@@ -20,9 +20,24 @@ namespace WPFTetris
     /// </summary>
     public partial class MainWindow : Window
     {
+        Dictionary<int[], Button> buttonsDict = new Dictionary<int[], Button>();
         public MainWindow()
         {
             InitializeComponent();
+            LoadButtons();
+        }
+        private void LoadButtons()
+        {
+            for(int y = 0;y<22; y++)
+            {
+                for (int x = 0; x < 10; x++)
+                {                    
+                    Button b = new Button();
+                    if (y < 2) b.Visibility = Visibility.Hidden;
+                    mainPanel.Children.Add(b);
+                    buttonsDict.Add(new int[] {y,x }, b);
+                }
+            }
         }
     }
 }
