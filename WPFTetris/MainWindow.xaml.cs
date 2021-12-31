@@ -18,14 +18,15 @@ namespace WPFTetris
 {
     public partial class MainWindow : Window
     {
-        Dictionary<int[], Button> buttonsDict = new Dictionary<int[], Button>();
+        Dictionary<string, Button> buttonsDict = new Dictionary<string, Button>();
         System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
         public MainWindow()
         {
             InitializeComponent();
             LoadButtons();
-            timer.Interval = new TimeSpan(0,0,0,0,500);
+            timer.Interval = new TimeSpan(0,0,1,0,500);
             timer.Tick += timer_Tick;
+
         }
         private void LoadButtons()
         {
@@ -36,18 +37,19 @@ namespace WPFTetris
                     Button b = new Button();
                     if (y < 2) b.Visibility = Visibility.Hidden;
                     mainPanel.Children.Add(b);
-                    buttonsDict.Add(new int[] { y, x }, b);
+                    buttonsDict.Add($"{y},{x}", b);
                 }
             }
+            timer.Start();
         }
         public void timer_Tick(object sender, EventArgs e)
-        {
+        { 
             for (int y = 2; y < 22; y++)
             {
                 bool isWhite = false;
                 for (int x = 0; x < 10; x++)
                 {
-                    if (buttonsDict[new int[] { y, x }].Background == Brushes.White) isWhite = true;
+                    if (buttonsDict[$"{y},{x}"].Background == Brushes.White) isWhite = true;
                 }
                 if (!isWhite)
                 {
@@ -61,7 +63,7 @@ namespace WPFTetris
             {
                 for (int x = 0; x < 10; x++)
                 {
-                    buttonsDict[new int[] { y+1, x }].Background = buttonsDict[new int[] { y, x }].Background;
+                    buttonsDict[$"{y+1},{x}"].Background = buttonsDict[$"{y}{x}"].Background;
                 }
             }
         }
