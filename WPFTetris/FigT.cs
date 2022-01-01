@@ -24,7 +24,8 @@ namespace WPFTetris
                 case 3:
                     return new int[,] { { y, x }, { y - 1, x }, { y + 1, x }, { y, x - 1 } };
                 default:
-                    return null;
+                    Type = 0;
+                    return new int[,] { { y, x }, { y, x - 1 }, { y, x + 1 }, { y - 1, x } };
             }
         }
     }

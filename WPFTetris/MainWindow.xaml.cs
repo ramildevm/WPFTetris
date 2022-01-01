@@ -24,7 +24,7 @@ namespace WPFTetris
         Figure figure;
 
         Dictionary<string, int[,]> figuresDict = new Dictionary<string, int[,]>();
-        Figure[] figures = new Figure[] 
+        Figure[] figures = new Figure[]
         {
             new FigI(0),
             new FigO(0,Brushes.Yellow),
@@ -36,30 +36,46 @@ namespace WPFTetris
         };
         int y = 1;
         int x = 4;
+        int points = 0;
         public MainWindow()
         {
             InitializeComponent();
             LoadButtons();
-            FillFiguresDict();
-            timer.Interval = new TimeSpan(0,0,0,0,100);
+            Start();
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 400);
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
         }
-        private void FillFiguresDict()
+        private void Start()
         {
             y = 1;
             x = 4;
 
             Random rand = new Random();
             figure = figures[rand.Next(0, figures.Length)];
-            figure.Type = rand.Next(4);
+            if (figure is FigZR || figure is FigZL || figure is FigI)figure.Type = rand.Next(2);
+            else if(figure is FigO) figure.Type = rand.Next(0);
+            else figure.Type = rand.Next(4);
             currentFigure = figure.GetFigure(y,x);
 
+            bool allWhite = true;
             for (int q = 0; q < 4; q++)
             {
-                buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = figure.Color;
-                buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "1";
+                if (buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background != Brushes.White) allWhite = false;
             }
+            if (allWhite)
+            {
+                for (int q = 0; q < 4; q++)
+                {
+                    buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = figure.Color;
+                    buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "1";
+                }
+            }
+            else
+            {
+                timer.Stop();
+                MessageBox.Show($"Game over! \nОчки: {points}");
+            }           
         }
         private void LoadButtons()
         {
@@ -118,10 +134,13 @@ namespace WPFTetris
                     }
                     if (!isWhite)
                     {
+                        points += 100;
+                        lblPoints.Content = $"Очки: {points}";
+                        if (points % 100 == 0) timer.Interval = new TimeSpan(0,0,0,0, timer.Interval.Milliseconds - 100);
                         MoveDown(y);
                     }
                 }
-                FillFiguresDict();
+                Start();
             }
         }
         private void MoveDown(int ymax)
@@ -181,6 +200,50 @@ namespace WPFTetris
             {
                 Move("Left");
             }
+            else if (e.Key == Key.LeftShift)
+            {
+                timer.Stop();
+                figure.Type++;
+                int[,] checkFigure = figure.GetFigure(y,x);
+                bool allWhite = true;
+                for (int q = 0; q < 4; q++)
+                {
+                    try
+                    {
+                        if (buttonsDict[$"{checkFigure[q, 0]},{checkFigure[q, 1]}"].Background != Brushes.White) allWhite = false;
+                    }
+                    catch { }
+                }
+                if (allWhite)
+                {
+                    for (int q = 0; q < 4; q++)
+                    {
+                        buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = Brushes.White;
+                        buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "0";
+                    }
+                    currentFigure = checkFigure;
+                    for (int q = 0; q < 4; q++)
+                    {
+                        buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = figure.Color;
+                        buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "1";
+                    }
+                    if (figure.Type != 0) figure.Type--;
+                }
+            }
+            timer.Start();
+        }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            for (int y = 0; y < 22; y++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    buttonsDict[$"{y},{x}"].Background = Brushes.White;
+                    buttonsDict[$"{y},{x}"].Tag = "0";
+                }
+            }
+            points = 0;
+            Start();
         }
     }
 }

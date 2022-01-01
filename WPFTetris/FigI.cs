@@ -20,7 +20,7 @@ namespace WPFTetris
                 case 1:
                     return new int[,] { { y, x }, { y - 1, x }, { y + 1, x }, { y + 2, x } };
                 default:
-                    this.Type = 1;
+                    this.Type = 0;
                     return new int[,] { { y, x }, { y - 1, x }, { y + 1, x }, { y + 2, x } };
             }
         }
