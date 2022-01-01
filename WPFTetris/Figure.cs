@@ -16,8 +16,7 @@ namespace WPFTetris
         {
             this.Type = type;
         }
-        public virtual int[,] GetType(int i) { return null; }
-        public virtual int[,] Move(int y, int x) { return null; }
+        public virtual int[,] GetFigure(int y, int x) { return null; }
 
     }
 }

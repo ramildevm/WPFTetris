@@ -20,10 +20,16 @@ namespace WPFTetris
     {
         Dictionary<string, Button> buttonsDict = new Dictionary<string, Button>();
         System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
-        int[,] currentFigure = new int[4, 2];
+        int[,] currentFigure = null;
         Figure figure;
 
         Dictionary<string, int[,]> figuresDict = new Dictionary<string, int[,]>();
+        Figure[] figures = new Figure[] 
+        {
+            new FigI(0),
+            new FigI(1),
+            new FigO(0)
+        };
         int y = 1;
         int x = 4;
         public MainWindow()
@@ -31,7 +37,7 @@ namespace WPFTetris
             InitializeComponent();
             LoadButtons();
             FillFiguresDict();
-            timer.Interval = new TimeSpan(0,0,0,0,200);
+            timer.Interval = new TimeSpan(0,0,0,0,100);
             timer.Tick += new EventHandler(timer_Tick);
             timer.Start();
         }
@@ -39,9 +45,11 @@ namespace WPFTetris
         {
             y = 1;
             x = 4;
-            //figuresDict.Add("I", new int[,] {{y,x},{y,x-1},{ });
-            currentFigure = new int[,] { { y, x }, { y, x - 1 }, {y,x+1 },{ y, x + 2 } };
-            figure = new FigI(0);
+
+            Random rand = new Random();
+            figure = figures[rand.Next(0, 3)];
+            currentFigure = figure.GetFigure(y,x);
+
             for (int q = 0; q < 4; q++)
             {
                 buttonsDict[$"{currentFigure[q,0]},{currentFigure[q, 1]}"].Background = Brushes.Black;
@@ -67,26 +75,18 @@ namespace WPFTetris
             }
         }
         public void timer_Tick(object sender, EventArgs e)
-        { 
-            for (int y = 2; y < 22; y++)
-            {
-                bool isWhite = false;
-                for (int x = 0; x < 10; x++)
-                {
-                    if (buttonsDict[$"{y},{x}"].Background == Brushes.White) isWhite = true;
-                }
-                if (!isWhite)
-                {
-                    MoveDown(y);
-                }
-            }
+        {
             int allowed = 0;
             for (int q = 0; q < 4; q++)
             {
-                if (y != 21 && !(buttonsDict[$"{currentFigure[q, 0] + 1},{currentFigure[q, 1]}"].Background != Brushes.White && buttonsDict[$"{currentFigure[q, 0]+1},{currentFigure[q, 1]}"].Tag.ToString() != "1"))
+                try
                 {
-                    allowed++;
+                    if (y != 21 && !(buttonsDict[$"{currentFigure[q, 0] + 1},{currentFigure[q, 1]}"].Background != Brushes.White && buttonsDict[$"{currentFigure[q, 0] + 1},{currentFigure[q, 1]}"].Tag.ToString() != "1"))
+                    {
+                        allowed++;
+                    }
                 }
+                catch { }
             }
             if (y < 21 && allowed == 4)
             {
@@ -96,7 +96,7 @@ namespace WPFTetris
                     buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "0";
                 }
                 y++;
-                currentFigure = new int[,] { { y, x }, { y, x - 1 }, { y, x + 1 }, { y, x + 2 } };
+                currentFigure = figure.GetFigure(y, x);
                 for (int q = 0; q < 4; q++)
                 {
                     buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = Brushes.Black;
@@ -109,16 +109,28 @@ namespace WPFTetris
                 {
                     buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "0";
                 }
+                for (int y = 2; y < 22; y++)
+                {
+                    bool isWhite = false;
+                    for (int x = 0; x < 10; x++)
+                    {
+                        if (buttonsDict[$"{y},{x}"].Background == Brushes.White) isWhite = true;
+                    }
+                    if (!isWhite)
+                    {
+                        MoveDown(y);
+                    }
+                }
                 FillFiguresDict();
             }
         }
         private void MoveDown(int ymax)
         {
-            for (int y = 1; y < ymax; y++)
+            for (int y = ymax; y > 0 ; y--)
             {
                 for (int x = 0; x < 10; x++)
                 {
-                    buttonsDict[$"{y+1},{x}"].Background = buttonsDict[$"{y},{x}"].Background;
+                    buttonsDict[$"{y},{x}"].Background = buttonsDict[$"{y-1},{x}"].Background;                  
                 }
             }
         }
@@ -151,7 +163,7 @@ namespace WPFTetris
                     buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "0";
                 }
                 x += i;
-                currentFigure = figure.Move(y, x);
+                currentFigure = figure.GetFigure(y, x);
                 for (int q = 0; q < 4; q++)
                 {
                     buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = Brushes.Black;
