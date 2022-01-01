@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFTetris"
         mc:Ignorable="d"
-        Title="MainWindow" Height="513.467" Width="375.2">
+        Title="MainWindow" Height="513.467" Width="375.2"
+        KeyDown="Window_KeyDown">
     <DockPanel Background="Azure">
         <WrapPanel Name="mainPanel" MaxHeight="441" MaxWidth="201" Background="LightGray">
             <WrapPanel.Resources>
