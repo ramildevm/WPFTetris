@@ -8,7 +8,7 @@ namespace WPFTetris
 {
     class FigI : Figure
     {
-        public FigI(int t) : base(t)
+        public FigI(int t) : base(t, System.Windows.Media.Brushes.SkyBlue)
         {
         }
         public override int[,] GetFigure(int y, int x)
@@ -20,8 +20,8 @@ namespace WPFTetris
                 case 1:
                     return new int[,] { { y, x }, { y - 1, x }, { y + 1, x }, { y + 2, x } };
                 default:
-                    return null;
-
+                    this.Type = 1;
+                    return new int[,] { { y, x }, { y - 1, x }, { y + 1, x }, { y + 2, x } };
             }
         }
     }

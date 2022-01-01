@@ -64,8 +64,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FigI.cs" />
+    <Compile Include="FigJ.cs" />
+    <Compile Include="FigL.cs" />
     <Compile Include="FigO.cs" />
+    <Compile Include="FigT.cs" />
     <Compile Include="Figure.cs" />
+    <Compile Include="FigZL.cs" />
+    <Compile Include="FigZR.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

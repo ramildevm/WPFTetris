@@ -27,8 +27,12 @@ namespace WPFTetris
         Figure[] figures = new Figure[] 
         {
             new FigI(0),
-            new FigI(1),
-            new FigO(0)
+            new FigO(0,Brushes.Yellow),
+            new FigT(0),
+            new FigZR(0),
+            new FigZL(0),
+            new FigL(0),
+            new FigJ(0),
         };
         int y = 1;
         int x = 4;
@@ -47,12 +51,13 @@ namespace WPFTetris
             x = 4;
 
             Random rand = new Random();
-            figure = figures[rand.Next(0, 3)];
+            figure = figures[rand.Next(0, figures.Length)];
+            figure.Type = rand.Next(4);
             currentFigure = figure.GetFigure(y,x);
 
             for (int q = 0; q < 4; q++)
             {
-                buttonsDict[$"{currentFigure[q,0]},{currentFigure[q, 1]}"].Background = Brushes.Black;
+                buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = figure.Color;
                 buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "1";
             }
         }
@@ -64,11 +69,6 @@ namespace WPFTetris
                 {
                     Button b = new Button();
                     //if (y < 2) b.Visibility = Visibility.Hidden;
-                    //if (y == 15 || y == 16) { b.Background = Brushes.Black; b.Tag = "1"; }
-                    //if (x == 5 && y > 10)
-                    //{
-                    //    b.Background = Brushes.Black; b.Tag = "1";
-                    //}
                     mainPanel.Children.Add(b);
                     buttonsDict.Add($"{y},{x}", b);
                 }
@@ -99,7 +99,7 @@ namespace WPFTetris
                 currentFigure = figure.GetFigure(y, x);
                 for (int q = 0; q < 4; q++)
                 {
-                    buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = Brushes.Black;
+                    buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = figure.Color;
                     buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "1";
                 }
             }
@@ -166,7 +166,7 @@ namespace WPFTetris
                 currentFigure = figure.GetFigure(y, x);
                 for (int q = 0; q < 4; q++)
                 {
-                    buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = Brushes.Black;
+                    buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = figure.Color;
                     buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "1";
                 }
             }
