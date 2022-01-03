@@ -24,5 +24,9 @@ namespace WPFTetris
                     return new int[,] { { y, x }, { y - 1, x }, { y + 1, x }, { y + 2, x } };
             }
         }
+        public override Figure GetCopy()
+        {
+            return new FigI(this.Type);
+        }
     }
 }

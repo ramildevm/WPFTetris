@@ -16,5 +16,9 @@ namespace WPFTetris
             this.Type = 0;
             return new int[,] { { y, x }, { y, x + 1 }, { y + 1, x + 1 }, { y + 1, x } };
         }
+        public override Figure GetCopy()
+        {
+            return new FigO(this.Type, this.Color);
+        }
     }
 }

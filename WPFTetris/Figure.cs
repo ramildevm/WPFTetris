@@ -18,7 +18,8 @@ namespace WPFTetris
             this.Type = type;
             this.Color = color;
         }
-        public virtual int[,] GetFigure(int y, int x) { return null; }
+        public abstract int[,] GetFigure(int y, int x);
+        public abstract Figure GetCopy();
 
     }
 }
