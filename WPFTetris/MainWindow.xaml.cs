@@ -43,6 +43,7 @@ namespace WPFTetris
         int y = 1;
         int x = 4;
         int points = 0;
+        int level = 1;
         public MainWindow()
         {
             InitializeComponent();
@@ -61,6 +62,7 @@ namespace WPFTetris
 
             if (nextFigure == null)
             {
+                //random figure generation
                 figure = figures[rand.Next(0, figures.Length)];
                 if (figure is FigZR || figure is FigZL || figure is FigI) figure.Type = rand.Next(2);
                 else if (figure is FigO) figure.Type = rand.Next(0);
@@ -91,6 +93,7 @@ namespace WPFTetris
             else
             {
                 timer.Stop();
+                time = new TimeSpan(0, 0, 0, 0, 400);
                 MessageBox.Show($"Game over! \nОчки: {points}");
             }
         }
@@ -108,12 +111,14 @@ namespace WPFTetris
                 for (int x = 0; x < 4; x++)
                 {
                     buttonsDictNxt[$"{x},{y}"].Background = Brushes.White;
+                    buttonsDictNxt[$"{x},{y}"].Visibility = Visibility.Hidden;
                 }
             }
             for (int q = 0; q < 4; q++)
             {
+                buttonsDictNxt[$"{nextFigureCoors[q, 0]},{nextFigureCoors[q, 1]}"].Visibility = Visibility.Visible;
                 buttonsDictNxt[$"{nextFigureCoors[q, 0]},{nextFigureCoors[q, 1]}"].Background = nextFigure.Color;
-            }
+            }            
         }
         private void LoadButtons()
         {
@@ -122,7 +127,6 @@ namespace WPFTetris
                 for (int x = 0; x < 10; x++)
                 {
                     Button b = new Button();
-                    //if (y < 2) b.Visibility = Visibility.Hidden;
                     mainPanel.Children.Add(b);
                     buttonsDict.Add($"{y},{x}", b);
                 }
@@ -131,7 +135,7 @@ namespace WPFTetris
             {
                 for (int x = 0; x < 4; x++)
                 {
-                    Button b = new Button();
+                    Button b = new Button() { Visibility = Visibility.Hidden};
                     otherPanel.Children.Add(b);
                     buttonsDictNxt.Add($"{y},{x}", b);
                 }
@@ -175,6 +179,7 @@ namespace WPFTetris
             }
             else
             {
+                timer.Interval = time;
                 for (int q = 0; q < 4; q++)
                 {
                     buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "0";
@@ -189,12 +194,13 @@ namespace WPFTetris
                     if (!isWhite)
                     {
                         points += 100;
-                        lblPoints.Content = $"Очки: {points}";
-                        timer.Interval = time;
-                        if (points % 100 == 0 && timer.Interval.Milliseconds != 100)
+                        lblPoints.Content = $"Очки: \n{points}";
+                        if (points % 400 == 0 && timer.Interval.Milliseconds != 100)
                         {
-                            time = new TimeSpan(0, 0, 0, 0, timer.Interval.Milliseconds - 100);
+                            time = new TimeSpan(0, 0, 0, 0, timer.Interval.Milliseconds - 50);
                             timer.Interval = time;
+                            level++;
+                            lblLevel.Content = $"Уровень: {level}";
                         }
                         MoveDown(y);
                     }
@@ -261,33 +267,40 @@ namespace WPFTetris
             }
             else if (e.Key == Key.Down)
             {
-                time = new TimeSpan(0, 0, 0, 0, timer.Interval.Milliseconds);
+                if(timer.Interval.Milliseconds != 10) time = new TimeSpan(0, 0, 0, 0, timer.Interval.Milliseconds);
                 timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             }
             else if (e.Key == Key.LeftShift)
             {
-                figure.Type++;
-                int[,] checkFigure = figure.GetFigure(y,x);
-                int allWhite = 0;
-                for (int q = 0; q < 4; q++)
+                if (timer.Interval.Milliseconds != 10)
                 {
-                    buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = Brushes.White;
-                    buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "0";
-                }
-                for (int q = 0; q < 4; q++)
-                {
-                    try
+                    Figure figureClone = figure.GetCopy();
+                    figureClone.Type++;
+                    int[,] checkFigure = figureClone.GetFigure(y, x);
+                    int allWhite = 0;
+                    for (int q = 0; q < 4; q++)
                     {
-                        if (buttonsDict[$"{checkFigure[q, 0]},{checkFigure[q, 1]}"].Background == Brushes.White) allWhite++;
+                        buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = Brushes.White;
+                        buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "0";
                     }
-                    catch { }
-                }
-                if (allWhite == 4) currentFigure = checkFigure;
-                else figure.Type--;
-                for (int q = 0; q < 4; q++)
-                {
-                    buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = figure.Color;
-                    buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "1";
+                    for (int q = 0; q < 4; q++)
+                    {
+                        try
+                        {
+                            if (buttonsDict[$"{checkFigure[q, 0]},{checkFigure[q, 1]}"].Background == Brushes.White) allWhite++;
+                        }
+                        catch { allWhite = 0; }
+                    }
+                    if (allWhite == 4)
+                    {
+                        currentFigure = figureClone.GetFigure(y,x);
+                        figure.Type++;
+                    }
+                    for (int q = 0; q < 4; q++)
+                    {
+                        buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Background = figure.Color;
+                        buttonsDict[$"{currentFigure[q, 0]},{currentFigure[q, 1]}"].Tag = "1";
+                    }
                 }
             }        
         }
@@ -302,9 +315,11 @@ namespace WPFTetris
                 }
             }
             points = 0;
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 400);
-            lblPoints.Content = $"Очки: {points}";
+            level = 1;
+            lblPoints.Content = $"Очки: \n{points}";
+            lblLevel.Content = $"Уровень: {level}";
             Start();
+            timer.Start();
         }
     }
 }

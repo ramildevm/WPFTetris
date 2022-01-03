@@ -18,12 +18,14 @@
                     <Setter Property="BorderThickness" Value="0.5"/>
                 </Style>
             </DockPanel.Resources>
-            <WrapPanel DockPanel.Dock="Left" Name="mainPanel" Margin="30,20,0,0" Width="201" Height="441" MaxHeight="441" MaxWidth="201" Background="LightGray">
-            </WrapPanel>
-            <WrapPanel x:Name="otherPanel" Height="81" Width="81">
-            </WrapPanel>
+            <WrapPanel DockPanel.Dock="Left" Name="mainPanel" Margin="30,20,0,0" Width="201" Height="441" MaxHeight="441" MaxWidth="201" Background="LightGray" />
+            <StackPanel>
+                <Label  Content="Следующая фигура:" Margin="0,100,0,0"/>
+                <WrapPanel  x:Name="otherPanel" Height="81" Width="81" Margin="0,20,0,0"/>
+                <Label x:Name="lblPoints" Content="Очки: " HorizontalAlignment="Center" Margin="15"/>
+                <Label x:Name="lblLevel" Content="Уровень: 1" HorizontalAlignment="Center" Margin="5"/>
+            </StackPanel>
         </DockPanel>
-        <Label x:Name="lblPoints" Content="Очки: " HorizontalAlignment="Center" Margin="15"/>
-        <Button Height="50" Width="100" Content="Начать" Click="Button_Click"/>
+        <Button Height="50" Width="100" Content="Начать" Margin="0,50,0,0" Click="Button_Click"/>
     </StackPanel>
 </Window>
